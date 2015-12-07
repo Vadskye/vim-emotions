@@ -1,11 +1,13 @@
 language: ruby
 rvm:
   - 2.0.0
+addons:
+  apt:
+    packages:
+      - vim
 before_script:
   - bundle install
   - bundle show
-  - sudo apt-get update
-  - sudo apt-get install vim
 script:
   - rake ci
 install:
