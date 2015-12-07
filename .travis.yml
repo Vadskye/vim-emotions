@@ -3,7 +3,7 @@ os:
 language: c
 compiler:
   - gcc
-  - clang
+    #  - clang
 env:
   matrix:
     - FEATURES=tiny
@@ -13,21 +13,18 @@ sudo: false
 cache:
   directories:
     - vim-src
-addons:
-  apt:
-    packages:
 before_install:
   # Set up hg purge.
   - echo '[extensions]' > ~/.hgrc
   - echo 'purge =' >> ~/.hgrc
 install:
   - git clone https://github.com/kana/vim-vspec.git
-  - if [ ! -d $TRAVIS_BUILD_DIR/vim-src/.hg ]; then
-      hg clone https://code.google.com/p/vim $TRAVIS_BUILD_DIR/vim-src
-    else
-      hg pull -u -R $TRAVIS_BUILD_DIR/vim-src
-    fi
-      - vim-common
+  - |
+      if [ ! -d $TRAVIS_BUILD_DIR/vim-src/.hg ]; then
+        hg clone https://code.google.com/p/vim $TRAVIS_BUILD_DIR/vim-src
+      else
+        hg pull -u -R $TRAVIS_BUILD_DIR/vim-src
+      fi
 before_script:
   - find $TRAVIS_BUILD_DIR/patches -type f -not -path '*/\.*'
       -exec patch -p1 -d $TRAVIS_BUILD_DIR/vim-src -i {} \;
