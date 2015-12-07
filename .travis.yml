@@ -4,7 +4,7 @@ rvm:
 addons:
   apt:
     packages:
-      - vim
+      - vim-common
 before_script:
   - bundle install
   - bundle show
