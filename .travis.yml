@@ -26,8 +26,6 @@ install:
         hg pull -u -R $TRAVIS_BUILD_DIR/vim-src
       fi
 before_script:
-  - find $TRAVIS_BUILD_DIR/patches -type f -not -path '*/\.*'
-      -exec patch -p1 -d $TRAVIS_BUILD_DIR/vim-src -i {} \;
   - rvm install 2.1.3
   - bundle install
   - bundle show
