@@ -1,30 +1,31 @@
-*emotions.txt* Motions so good they'll make you emotional             *emotions*
+*emotions.txt*  Motions so good they'll make you emotional            *emotions*
 
 ==============================================================================
 CONTENTS                                                   *emotions-contents*
 
     01. Introduction ................................. |emotions-introduction|
         a. Comparison with EasyMotion ............... |emotions-vs-easymotion|
-    02. Usage ............................................... |emotions-usage|
+    02. Getting Started ........................... |emotions-getting-started|
 
 ==============================================================================
 INTRODUCTION                                           *emotions-introduction*
 
 |emotions| provides quick, intuitive* key commands to quickly navigate text.
-These commands mimic Vim's normal navigation: f, t, and so on. However,
-they solve a fundamental problem with the built-in commands.
+These commands mimic Vim's normal navigation: f, t, and so on. However, they
+solve a fundamental problem with the built-in commands.
 
 Vim's built in |f| (and similar commands) will not always take you to your
-intended destination. Instead, they take you to the very next match -
-wherever that match happens to be. This is annoying because it forces you to
-care about how many matches lie between you and your destination.
+intended destination. Instead, they take you to the very next match - wherever
+that match happens to be. This is annoying because it forces you to care about
+how many matches lie between you and your destination. If you perform text
+searches with |/|, this problem is mitigated with 'incsearch', but that is
+only a partial solution.
 
-If you perform text searches with |/|, this problem is mitigated with
-'incsearch', but that is only a partial solution. |emotions| takes a different
-approach. Every visible match for your current search is assigned a label -
-a key or pair of keys that uniquely identifies that location (see
-|emotion-labels|). If you enter the key combination for your intended
-location, you will instantly jump to it - regardless of the text in between.
+|emotions| takes a different approach. Every visible match for your current
+search is assigned a label - a key or pair of keys that uniquely identifies
+that location (see |emotion-labels|). If you enter the key combination for
+your intended location, you will instantly jump to it - regardless of the text
+in between.
 
 This concept can be used for more than just searches in the tradition of |f|
 and |t|. Any motion, such as |w| and |e|, can be labeled in the same way.
@@ -36,8 +37,8 @@ Podolak for his Precise Jump script.
 (see http://www.vim.org/scripts/script.php?script_id=3437)
 This was adapted by Lokaltog, to create the excellent EasyMotion plugin
 (see https://github.com/easymotion/vim-easymotion)
-which currently maintained by haya14busa. The |emotion| plugin is simply a more
-modern re-implementation of that core idea.
+which currently maintained by haya14busa. The |emotion| plugin is simply a
+more modern re-implementation of that core idea.
 
 * For a sufficiently generous definition of "intuitive"
 
@@ -51,9 +52,9 @@ that |emotions| has to offer that EasyMotion is unlikely to incorporate.
 1. |conceal|-based labeling. EasyMotion creates labels by copying the text of
 every line with a target, using |substitute()| to replace the real text with
 the label keys, and then restoring the original text after the motion is
-complete. By default, |emotions| instead uses Vim's |conceal| feature to
-apply custom "highlighting" to each label, concealing the real text visually
-but leaving it unchanged. This is safer and, in many cases, faster.
+complete. By default, |emotions| instead uses Vim's |conceal| feature to apply
+custom "highlighting" to each label, concealing the real text visually but
+leaving it unchanged. This is safer and, in many cases, faster.
 
 |emotions| also supports replacement-based labeling for systems where
 concealing is not available, or is being used for other purposes.
@@ -65,8 +66,58 @@ compact codebase, and should be faster in practice*.
 * Citation needed.
 
 ==============================================================================
-USAGE                                             *usage*
+GETTING STARTED                                  *emotions-getting-started*
 
+You can use |emotions| without any configuration. By default, it provides the
+following mappings that correspond to normal single-character find motions:
+
+    <Leader>f Search forwards for one character, including the destination
+    <Leader>F Search backwards for one character, including the destination
+    <Leader>t Search forwards for one character, excluding the destination
+    <Leader>T Search backwards for one character, excluding the destination
+
+In addition, it provides the following mappings that correspond to normal
+|word|-based motions:
+
+    <Leader>w Start of the next |word|
+    <Leader>W Start of the next |WORD|
+    <Leader>e End of the next |word|
+    <Leader>E End of the next |WORD|
+    <Leader>b Start of the previous |word|
+    <Leader>B Start of the previous |WORD|
+    <Leader>ge End of the previous |word|
+    <Leader>gE End of the previous |WORD|
+
+Naturally, all of this can be changed - see |emotions-configuration|.
+
+When you use one of these mappings, you will see capitalized letters overlaid
+on the original text. If you start with:
+
+    The quick brown fox jumps over the lazy dog
+
+And type <Leader>w, it becomes:
+
+    {A}he {B}uick {C}rown {D}ox {E}umps {F}ver {G}he {H}azy {I}og
+
+If you then type one of the highlighted keys (ignoring case), the cursor will
+move to the corresponding location.
+
+These motions work in combination with normal operators, as well. If you start
+with the same sentence as above, and type d<Leader>w, you will see the same
+highlighted labels:
+
+    {A}he {B}uick {C}rown {D}ox {E}umps {F}ver {G}he {H}azy {I}og
+
+If you press a key, Vim will delete text up until the corresponding label. If
+you type {D} (or {d}) with the cursor at the start of the line, you get this:
+
+    fox jumps over the lazy dog
+
+This should work for all of Vim's built-in operators. It does not currently
+work in Visual mode, but that is coming soon.
+
+==============================================================================
+CONFIGURATION                                         *emotions-configuration*
 
 ==============================================================================
 vim:tw=78:sw=4:ts=4:ft=help:norl:
