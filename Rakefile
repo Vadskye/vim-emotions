@@ -3,7 +3,7 @@
 task :ci => [:dump, :test]
 
 task :dump do
-    sh 'vim --version'
+    sh './vim --version'
 end
 
 task :test do

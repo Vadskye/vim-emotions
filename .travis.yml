@@ -6,8 +6,8 @@ compiler:
     #  - clang
 env:
   matrix:
-    - FEATURES=tiny
-    - FEATURES=small
+    # - FEATURES=tiny
+    # - FEATURES=small
     - FEATURES=normal
 sudo: false
 cache:
@@ -42,4 +42,5 @@ script:
   - hg purge
   # hg update --clean will restore .hgignore.
   - hg update --clean
+  - which vim
   - rake ci
