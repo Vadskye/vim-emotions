@@ -241,6 +241,7 @@ function! s:search_using_pattern(args)
                 \ 'labeled_locations': labeled_locations,
                 \ 'pattern': a:args.pattern,
             \ })
+            undojoin
         endif
 
         " shade everything which is not a label
@@ -281,7 +282,6 @@ function! s:search_using_pattern(args)
         " the user's buffer, this has to run, so leave it here
 
         " restore the text of the original lines
-        undojoin
         for [line_number, line_text] in items(original_lines)
             keepjumps call setline(line_number, line_text)
         endfor
