@@ -107,8 +107,12 @@ endif
 " So '<Plug>(emotions-f-full)' is like 'f', but for the whole screen
 
 function! s:create_plug_mapping(name, function_name, function_args)
-    silent execute 'noremap <silent> <Plug>(emotions-' . a:name . ') ' .
+    silent execute 'nnoremap <silent> <Plug>(emotions-' . a:name . ') ' .
         \ ':<C-U>call emotions#' . a:function_name . '(' . string(a:function_args) . ')<CR>'
+    " to allow proper inclusive/exclusive handling, force the current
+    " operator to be handled internally via v:operator
+    silent execute 'onoremap <silent> <Plug>(emotions-' . a:name . ') ' .
+        \ '<Esc>:<C-U>call emotions#' . a:function_name . '(' . string(a:function_args) . ', v:operator)<CR>'
     " TODO: add xnoremap?
 endfunction
 

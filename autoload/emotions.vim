@@ -32,8 +32,10 @@ endfunction
 "       "direction" (string): as in s:search_using_pattern
 "       "include_destination" (number): as in s:search_using_pattern
 "       "scope" (string): as in s:search_using_pattern
-function! emotions#search_for_characters(args)
+function! emotions#search_for_characters(args, ...)
     let character_count = a:args.character_count
+    let current_operator = get(a:000, 0)
+
     if character_count == 0
         let character_count = 100
         let prompt_message = 'Search for any number of characters: '
@@ -89,7 +91,8 @@ function! emotions#search_for_characters(args)
         \ 'match_length': match_length,
         \ 'pattern': pattern,
         \ 'scope': a:args.scope,
-    \ })
+    \ }, current_operator)
+
 endfunction
 
 " public interface for s:search_using_pattern
@@ -102,16 +105,14 @@ endfunction
 "       "scope" (string): as s:search_using_pattern
 "   Optional:
 "       "repeat" (number): if true, currently executing a repeated motion
-function! emotions#search_using_pattern(args)
+function! emotions#search_using_pattern(args, ...)
 
     " determine whether we are currently executing an operator
-    if mode(1) == 'no'
-        let current_operator = v:operator
-    elseif get(a:args, 'repeat')
+    let current_operator = get(a:000, 0)
+    if get(a:args, 'repeat')
         let current_operator = s:last_operator
-    else
-        let current_operator = ""
     endif
+
     " save information about the current motion so we can repeat it
     let s:last_motion_args = a:args
     let s:last_operator = current_operator
@@ -174,10 +175,6 @@ function! s:search_using_pattern(args)
     let original_cursor_location = [line('.'), col('.')]
 
     try
-        " to allow proper inclusive/exclusive handling, force the current
-        " operator to be handled internally via a:args.current_operator
-        silent! execute "normal! \<Esc>"
-
         if a:args.scope == 'direction'
             if a:args.direction == 'forward'
                 let window_boundaries = [line('.'), line('w$')]
@@ -899,7 +896,10 @@ function! s:jump_to_location(args) abort
 
     " if we're in operator-pending mode,
     " we have to worry about whether to include the destination
-    if ! empty(a:args.current_operator)
+    if empty(a:args.current_operator)
+        " we don't use 'keepjumps' here because we want to store this movement
+        silent call cursor(line_number, col_number)
+    else
         " because normal! has to be a complete command, construct the whole
         " command, including the cursor jump, and then execute it at the end
         let motion_command = a:args.current_operator
@@ -915,9 +915,6 @@ function! s:jump_to_location(args) abort
 
         silent execute "normal! " . motion_command
             \ . ":call cursor(" .  line_number . ", " . col_number . ")\<CR>"
-    else
-        " we don't use 'keepjumps' here because we want to store this movement
-        silent call cursor(line_number, col_number)
     endif
 endfunction
 
@@ -929,7 +926,8 @@ endfunction
 "       "scope" (string): as in s:search_using_pattern
 "       "start_of_line" (number): if true, go to the start of the line
 "           if false, go to the current cursor position
-function! emotions#search_for_column(args)
+function! emotions#search_for_column(args, ...)
+    let current_operator = get(a:000, 0)
     let column = a:args.start_of_line
         \ ? 1
         \ : col('.')
@@ -940,7 +938,7 @@ function! emotions#search_for_column(args)
         \ 'match_length': 1,
         \ 'pattern': pattern,
         \ 'scope': a:args.scope,
-    \ })
+    \ }, current_operator)
 endfunction
 
 " Search for the last search pattern by passing into #search#using_pattern
@@ -953,9 +951,11 @@ endfunction
 "       "scope" (string): as in s:search_using_pattern
 "       "start_of_line" (number): if true, go to the start of the line
 "           if false, go to the current cursor position
-function! emotions#search_for_last_search(args)
+function! emotions#search_for_last_search(args, ...)
+    let current_operator = get(a:000, 0)
     let pattern = getreg('/')
     let direction = a:args.direction
+
     if direction == "same"
         if v:searchforward
             let direction = 'forward'
@@ -976,7 +976,7 @@ function! emotions#search_for_last_search(args)
         \ 'match_length': 0,
         \ 'pattern': pattern,
         \ 'scope': a:args.scope,
-    \ })
+    \ }, current_operator)
 endfunction
 
 function! emotions#repeat(args)
