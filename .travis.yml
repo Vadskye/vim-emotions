@@ -32,7 +32,7 @@ before_script:
 script:
   - cd $TRAVIS_BUILD_DIR/vim-src/src
   - ./configure --with-features=$FEATURES
-  - make
+  - make > /dev/null
   - ./vim --version
   - make test
   # Clean up, otherwise build results will be cached by Travis.
@@ -43,4 +43,5 @@ script:
   # hg update --clean will restore .hgignore.
   - hg update --clean
   - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH
+  - which vim
   - rake ci
