@@ -31,10 +31,10 @@ before_script:
   - bundle show
 script:
   - cd $TRAVIS_BUILD_DIR/vim-src/src
-  - ./configure --with-features=$FEATURES
+  - ./configure --with-features=$FEATURES > /dev/null
   - make > /dev/null
   - ./vim --version
-  - make test
+  - make test > /dev/null
   # Clean up, otherwise build results will be cached by Travis.
   - cd ..
   # Remove all files not in the repo, even the ignored ones.
@@ -42,7 +42,10 @@ script:
   - hg purge
   # hg update --clean will restore .hgignore.
   - hg update --clean
-  - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH; which vim
+  - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH
   - echo $PATH
+  - ls $PATH
   - which vim
-  - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH; rake ci
+  - sudo mv /usr/bin/vim /usr/bin/vim_backup
+  - which vim
+  - rake ci
