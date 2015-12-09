@@ -42,6 +42,7 @@ script:
   - hg purge
   # hg update --clean will restore .hgignore.
   - hg update --clean
-  - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH
+  - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH; which vim
+  - echo $PATH
   - which vim
-  - rake ci
+  - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH; rake ci
