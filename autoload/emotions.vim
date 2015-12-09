@@ -346,7 +346,7 @@ function! s:prepare_buffer(args) abort
         " called.  (this was fun to debug)
         " To solve this, run a useless syntax command and then undo it later
         if ! getbufvar("", "emotions_has_been_run")
-            syntax match ThisGroupNameShouldNeverEverBeUsed '\v.'
+            syntax match ThisGroupNameShouldNeverEverBeUsed '\v%1c%1l.'
             call setbufvar("", "emotions_has_been_run", 1)
         endif
     else
