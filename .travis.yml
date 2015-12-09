@@ -9,7 +9,7 @@ env:
     # - FEATURES=tiny
     # - FEATURES=small
     - FEATURES=normal
-sudo: false
+sudo: true
 cache:
   directories:
     - vim-src
@@ -44,7 +44,7 @@ script:
   - hg update --clean
   - export PATH=$TRAVIS_BUILD_DIR/vim-src/src:$PATH
   - echo $PATH
-  - ls $PATH
+  - ls $TRAVIS_BUILD_DIR/vim-src/src
   - which vim
   - sudo mv /usr/bin/vim /usr/bin/vim_backup
   - which vim
