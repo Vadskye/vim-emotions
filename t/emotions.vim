@@ -50,22 +50,22 @@ describe 'Default config'
     context 'has <Plug> mappings'
         it 'for f'
             Expect maparg('<Plug>(emotions-f)', 'n') == ":<C-U>call emotions#search_for_characters({'direction': 'forward', 'scope': 'direction', 'include_destination': 1, 'character_count': 1})<CR>"
-            Expect maparg('<Plug>(emotions-f)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'forward', 'scope': 'direction', 'include_destination': 1, 'character_count': 1})<CR>"
+            Expect maparg('<Plug>(emotions-f)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'forward', 'scope': 'direction', 'include_destination': 1, 'character_count': 1}, v:operator)<CR>"
         end
 
         it 'for F'
             Expect maparg('<Plug>(emotions-F)', 'n') == ":<C-U>call emotions#search_for_characters({'direction': 'backward', 'scope': 'direction', 'include_destination': 1, 'character_count': 1})<CR>"
-            Expect maparg('<Plug>(emotions-F)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'backward', 'scope': 'direction', 'include_destination': 1, 'character_count': 1})<CR>"
+            Expect maparg('<Plug>(emotions-F)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'backward', 'scope': 'direction', 'include_destination': 1, 'character_count': 1}, v:operator)<CR>"
         end
 
         it 'for t'
             Expect maparg('<Plug>(emotions-t)', 'n') == ":<C-U>call emotions#search_for_characters({'direction': 'forward', 'scope': 'direction', 'include_destination': 0, 'character_count': 1})<CR>"
-            Expect maparg('<Plug>(emotions-t)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'forward', 'scope': 'direction', 'include_destination': 0, 'character_count': 1})<CR>"
+            Expect maparg('<Plug>(emotions-t)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'forward', 'scope': 'direction', 'include_destination': 0, 'character_count': 1}, v:operator)<CR>"
         end
 
         it 'for T'
             Expect maparg('<Plug>(emotions-T)', 'n') == ":<C-U>call emotions#search_for_characters({'direction': 'backward', 'scope': 'direction', 'include_destination': 0, 'character_count': 1})<CR>"
-            Expect maparg('<Plug>(emotions-T)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'backward', 'scope': 'direction', 'include_destination': 0, 'character_count': 1})<CR>"
+            Expect maparg('<Plug>(emotions-T)', 'o') == "<Esc>:<C-U>call emotions#search_for_characters({'direction': 'backward', 'scope': 'direction', 'include_destination': 0, 'character_count': 1}, v:operator)<CR>"
         end
     end
 end
