@@ -139,7 +139,9 @@ function! emotions#search_using_pattern(args, ...)
         \ 'skip_folded_lines': g:emotions_skip_folded_lines,
     \ })
 
-    silent! call repeat#set("\<Plug>(emotions-repeat)", v:count)
+    if current_operator
+        silent! call repeat#set("\<Plug>(emotions-repeat)", v:count)
+    endif
 endfunction
 
 " perform the full suite of operations - find match locations, prompt the user
@@ -346,7 +348,7 @@ function! s:prepare_buffer(args) abort
         " called.  (this was fun to debug)
         " To solve this, run a useless syntax command and then undo it later
         if ! getbufvar("", "emotions_has_been_run")
-            syntax match ThisGroupNameShouldNeverEverBeUsed '\v%1c%1l.'
+            syntax match ThisGroupNameShouldNeverEverBeUsed '\v^%1c%1l.'
             call setbufvar("", "emotions_has_been_run", 1)
         endif
     else
