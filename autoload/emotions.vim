@@ -23,6 +23,24 @@ function! s:display_message(message, highlight_color)
     echohl None
 endfunction
 
+if exists('*matchaddpos')
+    function! s:matchaddpos(...)
+        return call('matchaddpos', a:000)
+    endfunction
+else
+    " reimplement matchaddpos for versions of vim without that function
+    " properly representing matchaddpos is more complicated than this
+    " but this plugin only uses one version of it
+    function! s:matchaddpos(group, pos, ...) abort
+        for location in a:pos
+            let pattern = '\v%l' . location[0] . '%c' . location[1]
+                \ . '.{1,' . get(location, 2, 1) . '}'
+            let args = [a:group, pattern] + a:000
+            call call('matchadd', args)
+        endfor
+    endfunction
+endif
+
 " Ask the user for characters to search for
 " Construct a pattern using the provided characters
 " Then search for it using #search_using_pattern
@@ -499,7 +517,7 @@ function! s:conceal_match_locations(args) abort
             let location = match_locations[i]
             let key = a:args.keys[i]
 
-            call add(match_ids, matchaddpos(
+            call add(match_ids, s:matchaddpos(
                 \ 'Conceal',
                 \ [location],
                 \ 10,
@@ -565,7 +583,7 @@ function! s:conceal_match_locations(args) abort
             " create two conceals - one for the first key, and the other
             " for the second key
             " the first key always conceals one character
-            call add(match_ids, matchaddpos(
+            call add(match_ids, s:matchaddpos(
                 \ 'Conceal',
                 \ [[line_number, col_number, 1]],
                 \ 10,
@@ -575,7 +593,7 @@ function! s:conceal_match_locations(args) abort
             " the second key is immediately after the first key
             " it conceals the rest of the match if replace_full_match is enabled
             " otherwise it also conceals a single character
-            call add(match_ids, matchaddpos(
+            call add(match_ids, s:matchaddpos(
                 \ 'Conceal',
                 \ [[line_number, col_number + 1, match_length]],
                 \ 20,
@@ -761,13 +779,13 @@ function! s:highlight_match_locations(args)
 
         for [first_key, location] in items(a:args.labeled_locations)
             if type(location) == type([])
-                call add(match_ids, matchaddpos(
+                call add(match_ids, s:matchaddpos(
                     \ current_color,
                     \ [[location[0], location[1], 1]],
                 \ ))
             elseif type(location) == type({})
                 for sublocation in values(location)
-                    call add(match_ids, matchaddpos(
+                    call add(match_ids, s:matchaddpos(
                         \ current_color,
                         \ [[sublocation[0], sublocation[1], 2]],
                     \ ))
@@ -782,7 +800,7 @@ function! s:highlight_match_locations(args)
 
         for [first_key, location] in items(a:args.labeled_locations)
             if type(location) == type([])
-                call add(match_ids, matchaddpos(
+                call add(match_ids, s:matchaddpos(
                     \ current_color,
                     \ [[location[0], location[1], 1]],
                 \ ))
@@ -792,7 +810,7 @@ function! s:highlight_match_locations(args)
 
             elseif type(location) == type({})
                 for sublocation in values(location)
-                    call add(match_ids, matchaddpos(
+                    call add(match_ids, s:matchaddpos(
                         \ current_color,
                         \ [[sublocation[0], sublocation[1], 2]],
                     \ ))
@@ -806,17 +824,17 @@ function! s:highlight_match_locations(args)
     elseif a:args.highlight_type == 'sublabels'
         for [first_key, location] in items(a:args.labeled_locations)
             if type(location) == type([])
-                call add(match_ids, matchaddpos(
+                call add(match_ids, s:matchaddpos(
                     \ a:args.highlight_colors.primary,
                     \ [[location[0], location[1], 1]],
                 \ ))
             elseif type(location) == type({})
                 for sublocation in values(location)
-                    call add(match_ids, matchaddpos(
+                    call add(match_ids, s:matchaddpos(
                         \ a:args.highlight_colors.primary,
                         \ [[sublocation[0], sublocation[1], 1]],
                     \ ))
-                    call add(match_ids, matchaddpos(
+                    call add(match_ids, s:matchaddpos(
                         \ a:args.highlight_colors.secondary,
                         \ [[sublocation[0], sublocation[1]+1, 1]],
                     \ ))
