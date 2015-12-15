@@ -32,12 +32,14 @@ else
     " properly representing matchaddpos is more complicated than this
     " but this plugin only uses one version of it
     function! s:matchaddpos(group, pos, ...) abort
+        let patterns = []
         for location in a:pos
-            let pattern = '\v%l' . location[0] . '%c' . location[1]
+            call add(patterns, '%l' . location[0] . '%c' . location[1]
                 \ . '.{1,' . get(location, 2, 1) . '}'
-            let args = [a:group, pattern] + a:000
-            call call('matchadd', args)
+            \ )
         endfor
+        let pattern = '\v(' . join(patterns, '|') . ')'
+        return call('matchadd', [a:group, pattern] + a:000)
     endfunction
 endif
 
