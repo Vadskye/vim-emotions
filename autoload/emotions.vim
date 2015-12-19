@@ -304,9 +304,11 @@ function! s:search_using_pattern(args) abort
         " the user's buffer, this has to run, so leave it here
 
         " restore the text of the original lines
-        for [line_number, line_text] in items(original_lines)
-            keepjumps call setline(line_number, line_text)
-        endfor
+        if exists("original_lines")
+            for [line_number, line_text] in items(original_lines)
+                keepjumps call setline(line_number, line_text)
+            endfor
+        endif
 
         " restore buffer settings
         for [setting_name, value] in items(original_buffer_settings)
