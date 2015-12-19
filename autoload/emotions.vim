@@ -159,7 +159,7 @@ function! emotions#search_using_pattern(args, ...) abort
         \ 'skip_folded_lines': g:emotions_skip_folded_lines,
     \ })
 
-    if current_operator
+    if exists(current_operator)
         silent! call repeat#set("\<Plug>(emotions-repeat)", v:count)
     endif
 endfunction
