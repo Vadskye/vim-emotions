@@ -34,7 +34,7 @@ else
     function! s:matchaddpos(group, pos, ...) abort
         let patterns = []
         for location in a:pos
-            call add(patterns, '\v%l' . location[0] . '%c' . location[1]
+            call add(patterns, '\v%' . location[0] . 'l%' . location[1] . 'c'
                 \ . '.{1,' . get(location, 2, 1) . '}'
             \ )
         endfor
