@@ -14,6 +14,7 @@ endfunction
 
 function! CreateBuffer()
     new
+    " add emotions mappings
     map <buffer> f <Plug>(emotions-f)
     map <buffer> F <Plug>(emotions-F)
     map <buffer> t <Plug>(emotions-t)
@@ -78,6 +79,25 @@ function! s:check_skip_conceal()
     endif
 endfunction
 
+let s:tests = {
+    \ 'f': {},
+    \ 'F': {},
+    \ 't': {},
+    \ 'T': {},
+\ }
+
+function! s:tests.f.search_forward_one()
+    normal! gg
+    normal fea
+    Expect CursorInfo() == [1, 2, 'e']
+endfunction
+
+function! s:tests.f.search_forward_multiple()
+    normal! gg
+    normal fea
+    Expect CursorInfo() == [1, 2, 'e']
+endfunction
+
 describe 'Conceal-based'
     before
         let g:emotions_highlight_type = 'conceal'
@@ -95,16 +115,12 @@ describe 'Conceal-based'
     context "f"
         it 'searches forward with one match'
             call s:check_skip_conceal()
-            normal! gg
-            normal fea
-            Expect CursorInfo() == [1, 2, 'e']
+            call s:tests.f.search_forward_one()
         end
 
         it 'searches forward with multiple matches'
             call s:check_skip_conceal()
-            normal! gg
-            normal fib
-            Expect CursorInfo() == [2, 6, 'i']
+            call s:tests.f.search_forward_multiple()
         end
 
         it 'ignores case by default'
@@ -119,6 +135,13 @@ describe 'Conceal-based'
             normal! G$
             normal fea
             Expect CursorInfo() == [2, 15, '.']
+        end
+
+        it "deletes text with 'd'"
+            call s:check_skip_conceal()
+            normal! gg
+            normal dfoa
+            Expect getline('.') == ' world.'
         end
     end
 
@@ -169,15 +192,11 @@ describe 'Single replacement-based'
 
     context "f"
         it 'searches forward with one match'
-            normal! gg
-            normal fea
-            Expect CursorInfo() == [1, 2, 'e']
+            call s:tests.f.search_forward_one()
         end
 
         it 'searches forward with multiple matches'
-            normal! gg
-            normal fib
-            Expect CursorInfo() == [2, 6, 'i']
+            call s:tests.f.search_forward_multiple()
         end
 
         it 'ignores case by default'
