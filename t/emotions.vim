@@ -88,7 +88,7 @@ describe 'Conceal-based'
         it 'searches forward with one match'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif ! v:version >= 704
+            elseif v:version < 704
                 SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! gg
@@ -108,7 +108,7 @@ describe 'Conceal-based'
         it 'ignores case by default'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif ! v:version >= 704
+            elseif v:version < 704
                 SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! gg
@@ -119,7 +119,7 @@ describe 'Conceal-based'
         it 'does not search backward'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif ! v:version >= 704
+            elseif v:version < 704
                 SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
@@ -132,7 +132,7 @@ describe 'Conceal-based'
         it 'searches backward with one match'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif ! v:version >= 704
+            elseif v:version < 704
                 SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
@@ -143,7 +143,7 @@ describe 'Conceal-based'
         it 'searches backward with multiple matches'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif ! v:version >= 704
+            elseif v:version < 704
                 SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
@@ -154,7 +154,7 @@ describe 'Conceal-based'
         it 'ignores case by default'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif ! v:version >= 704
+            elseif v:version < 704
                 SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
@@ -165,7 +165,7 @@ describe 'Conceal-based'
         it 'does not search forward'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif ! v:version >= 704
+            elseif v:version < 704
                 SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! gg
