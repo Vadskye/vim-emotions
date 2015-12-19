@@ -115,16 +115,16 @@ let s:test = {
         Expect CursorInfo() == [2, 15, '.']
     endfunction
 
+    function! s:test.f.change()
+        normal! gg
+        execute "normal cfoaHi\<Esc>"
+        Expect getline('.') == 'Hi world.'
+    endfunction
+
     function! s:test.f.delete()
         normal! gg
         normal dfoa
         Expect getline('.') == ' world.'
-    endfunction
-
-    function! s:test.f.replace()
-        normal! gg
-        execute "normal rfoaHi\<Esc>"
-        Expect getline('.') == 'Hi world.'
     endfunction
 
     function! s:test.f.yank()
@@ -159,16 +159,16 @@ let s:test = {
         Expect CursorInfo() == [1, 1, 'H']
     endfunction
 
+    function! s:test.F.change()
+        normal! gg$
+        execute "normal cFwaplanet\<Esc>"
+        Expect getline('.') == 'Hello planet.'
+    endfunction
+
     function! s:test.F.delete()
         normal! gg$
         normal dFwa
         Expect getline('.') == 'Hello .'
-    endfunction
-
-    function! s:test.F.replace()
-        normal! gg$
-        execute "normal rFwaplanet\<Esc>"
-        Expect getline('.') == 'Hello planet.'
     endfunction
 
     function! s:test.F.yank()
@@ -177,6 +177,96 @@ let s:test = {
         " this is the same as Vim's normal behavior
         normal yFwaP
         Expect getline('.') == 'Hello worldworld.'
+    endfunction
+
+" tests for "t"
+
+    function! s:test.t.one_match()
+        normal! gg
+        normal tea
+        Expect CursorInfo() == [1, 2, 'e']
+    endfunction
+
+    function! s:test.t.multiple_matches()
+        normal! gg
+        normal tea
+        Expect CursorInfo() == [1, 2, 'e']
+    endfunction
+
+    function! s:test.t.ignore_case()
+        normal! gg
+        normal ttb
+        Expect CursorInfo() == [2, 11, 't']
+    endfunction
+
+    function! s:test.t.direction()
+        normal! G$
+        normal tea
+        Expect CursorInfo() == [2, 15, '.']
+    endfunction
+
+    function! s:test.t.change()
+        normal! gg
+        execute "normal ctoaHi\<Esc>"
+        Expect getline('.') == 'Hio world.'
+    endfunction
+
+    function! s:test.t.delete()
+        normal! gg
+        normal dtoa
+        Expect getline('.') == 'o world.'
+    endfunction
+
+    function! s:test.t.yank()
+        normal! gg
+        normal ytoaP
+        Expect getline('.') == 'HellHello world.'
+    endfunction
+
+" tests for "T"
+
+    function! s:test.T.one_match()
+        normal! G$
+        normal Twa
+        Expect CursorInfo() == [1, 7, 'w']
+    endfunction
+
+    function! s:test.T.multiple_matches()
+        normal! G$
+        normal Tib
+        Expect CursorInfo() == [2, 3, 'i']
+    endfunction
+
+    function! s:test.T.ignore_case()
+        normal! G$
+        normal TTc
+        Expect CursorInfo() == [2, 1, 'T']
+    endfunction
+
+    function! s:test.T.direction()
+        normal! gg
+        normal Tea
+        Expect CursorInfo() == [1, 1, 'H']
+    endfunction
+
+    function! s:test.T.change()
+        normal! gg$
+        execute "normal cTwaplanet\<Esc>"
+        Expect getline('.') == 'Hello wplanet.'
+    endfunction
+
+    function! s:test.T.delete()
+        normal! gg$
+        normal dTwa
+        Expect getline('.') == 'Hello w.'
+    endfunction
+
+    function! s:test.T.yank()
+        normal! gg$
+        " note that the cursor moves when yanking backwards, but not forwards
+        " this is the same as Vim's normal behavior
+        normal yTwaP
+        Expect getline('.') == 'Hello worldorld.'
     endfunction
 
 " calling the tests using vspec
@@ -216,14 +306,14 @@ describe 'Conceal-based'
             call s:test.f.direction()
         end
 
+        it "changes text with 'c'"
+            call s:check_skip_conceal()
+            call s:test.f.change()
+        end
+
         it "deletes text with 'd'"
             call s:check_skip_conceal()
             call s:test.f.delete()
-        end
-
-        it "replaces text with 'r'"
-            call s:check_skip_conceal()
-            call s:test.f.yank()
         end
 
         it "yanks text with 'y'"
@@ -253,19 +343,93 @@ describe 'Conceal-based'
             call s:test.F.direction()
         end
 
+        it "changes text with 'c'"
+            call s:check_skip_conceal()
+            call s:test.F.change()
+        end
+
         it "deletes text with 'd'"
             call s:check_skip_conceal()
             call s:test.F.delete()
         end
 
-        it "replaces text with 'r'"
+        it "yanks text with 'y'"
             call s:check_skip_conceal()
             call s:test.F.yank()
+        end
+    end
+
+    context "t"
+        it 'searches forward with one match'
+            call s:check_skip_conceal()
+            call s:test.t.one_match()
+        end
+
+        it 'searches forward with multiple matches'
+            call s:check_skip_conceal()
+            call s:test.t.multiple_matches()
+        end
+
+        it 'ignores case by default'
+            call s:check_skip_conceal()
+            call s:test.t.ignore_case()
+        end
+
+        it 'does not search backward'
+            call s:check_skip_conceal()
+            call s:test.t.direction()
+        end
+
+        it "changes text with 'c'"
+            call s:check_skip_conceal()
+            call s:test.t.change()
+        end
+
+        it "deletes text with 'd'"
+            call s:check_skip_conceal()
+            call s:test.t.delete()
         end
 
         it "yanks text with 'y'"
             call s:check_skip_conceal()
-            call s:test.F.yank()
+            call s:test.t.yank()
+        end
+    end
+
+    context "T"
+        it 'searches backward with one match'
+            call s:check_skip_conceal()
+            call s:test.T.one_match()
+        end
+
+        it 'searches backward with multiple matches'
+            call s:check_skip_conceal()
+            call s:test.T.multiple_matches()
+        end
+
+        it 'ignores case by default'
+            call s:check_skip_conceal()
+            call s:test.T.ignore_case()
+        end
+
+        it 'does not search forward'
+            call s:check_skip_conceal()
+            call s:test.T.direction()
+        end
+
+        it "changes text with 'c'"
+            call s:check_skip_conceal()
+            call s:test.T.change()
+        end
+
+        it "deletes text with 'd'"
+            call s:check_skip_conceal()
+            call s:test.T.delete()
+        end
+
+        it "yanks text with 'y'"
+            call s:check_skip_conceal()
+            call s:test.T.yank()
         end
     end
 end
@@ -286,75 +450,121 @@ describe 'Single replacement-based'
 
     context "f"
         it 'searches forward with one match'
-            call s:check_skip_conceal()
             call s:test.f.one_match()
         end
 
         it 'searches forward with multiple matches'
-            call s:check_skip_conceal()
             call s:test.f.multiple_matches()
         end
 
         it 'ignores case by default'
-            call s:check_skip_conceal()
             call s:test.f.ignore_case()
         end
 
         it 'does not search backward'
-            call s:check_skip_conceal()
             call s:test.f.direction()
         end
 
+        it "changes text with 'c'"
+            call s:test.f.change()
+        end
+
         it "deletes text with 'd'"
-            call s:check_skip_conceal()
             call s:test.f.delete()
         end
 
-        it "replaces text with 'r'"
-            call s:check_skip_conceal()
-            call s:test.f.yank()
-        end
-
         it "yanks text with 'y'"
-            call s:check_skip_conceal()
             call s:test.f.yank()
         end
     end
 
     context "F"
         it 'searches backward with one match'
-            call s:check_skip_conceal()
             call s:test.F.one_match()
         end
 
         it 'searches backward with multiple matches'
-            call s:check_skip_conceal()
             call s:test.F.multiple_matches()
         end
 
         it 'ignores case by default'
-            call s:check_skip_conceal()
             call s:test.F.ignore_case()
         end
 
         it 'does not search forward'
-            call s:check_skip_conceal()
             call s:test.F.direction()
         end
 
         it "deletes text with 'd'"
-            call s:check_skip_conceal()
             call s:test.F.delete()
         end
 
-        it "replaces text with 'r'"
-            call s:check_skip_conceal()
-            call s:test.F.yank()
+        it "changes text with 'c'"
+            call s:test.F.change()
         end
 
         it "yanks text with 'y'"
-            call s:check_skip_conceal()
             call s:test.F.yank()
+        end
+    end
+
+    context "t"
+        it 'searches forward with one match'
+            call s:test.t.one_match()
+        end
+
+        it 'searches forward with multiple matches'
+            call s:test.t.multiple_matches()
+        end
+
+        it 'ignores case by default'
+            call s:test.t.ignore_case()
+        end
+
+        it 'does not search backward'
+            call s:test.t.direction()
+        end
+
+        it "changes text with 'c'"
+            call s:test.t.change()
+        end
+
+        it "deletes text with 'd'"
+            call s:test.t.delete()
+        end
+
+        it "yanks text with 'y'"
+            call s:test.t.yank()
+        end
+    end
+
+    context "T"
+        it 'searches backward with one match'
+            call s:test.T.one_match()
+        end
+
+        it 'searches backward with multiple matches'
+            call s:test.T.multiple_matches()
+        end
+
+        it 'ignores case by default'
+            call s:test.T.ignore_case()
+        end
+
+        it 'does not search forward'
+            call s:test.T.direction()
+        end
+
+        it "changes text with 'c'"
+            call s:test.T.change()
+        end
+
+        it "deletes text with 'd'"
+            call s:test.T.delete()
+        end
+
+        it "yanks text with 'y'"
+            call s:test.T.yank()
         end
     end
 end
