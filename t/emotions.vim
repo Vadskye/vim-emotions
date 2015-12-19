@@ -99,6 +99,7 @@ describe 'Conceal-based'
         it 'searches forward with multiple matches'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
+            elseif v:version < 704
             endif
             normal! gg
             normal fib
