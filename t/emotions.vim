@@ -70,6 +70,14 @@ describe 'Default config'
     end
 end
 
+function! s:check_skip_conceal()
+    if ! has('conceal')
+        SKIP 'Conceal is not enabled'
+    elseif v:version < 704
+        SKIP 'Conceal only works properly on Vim 7.4+'
+    endif
+endfunction
+
 describe 'Conceal-based'
     before
         let g:emotions_highlight_type = 'conceal'
@@ -86,44 +94,28 @@ describe 'Conceal-based'
 
     context "f"
         it 'searches forward with one match'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! gg
             normal fea
             Expect CursorInfo() == [1, 2, 'e']
         end
 
         it 'searches forward with multiple matches'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! gg
             normal fib
             Expect CursorInfo() == [2, 6, 'i']
         end
 
         it 'ignores case by default'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! gg
             normal ftb
             Expect CursorInfo() == [2, 11, 't']
         end
 
         it 'does not search backward'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! G$
             normal fea
             Expect CursorInfo() == [2, 15, '.']
@@ -132,44 +124,28 @@ describe 'Conceal-based'
 
     context "F"
         it 'searches backward with one match'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! G$
             normal Fwa
             Expect CursorInfo() == [1, 7, 'w']
         end
 
         it 'searches backward with multiple matches'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! G$
             normal Fib
             Expect CursorInfo() == [2, 3, 'i']
         end
 
         it 'ignores case by default'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! G$
             normal FTc
             Expect CursorInfo() == [2, 1, 'T']
         end
 
         it 'does not search forward'
-            if ! has('conceal')
-                SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
-            endif
+            call s:check_skip_conceal()
             normal! gg
             normal Fea
             Expect CursorInfo() == [1, 1, 'H']
