@@ -191,7 +191,7 @@ endfunction
 "       "shade_highlight_group" (string): if nonempty, shade everything except the
 "           labels with this highlight group to make the labels easier to see
 "       "skip_folded_lines" (number): if true, skip matches within folded lines
-function! s:search_using_pattern(args)
+function! s:search_using_pattern(args) abort
 
     let original_buffer_settings = s:prepare_buffer({'highlight_type': a:args.highlight_type})
     let original_cursor_location = [line('.'), col('.')]
