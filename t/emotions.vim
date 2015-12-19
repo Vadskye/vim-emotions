@@ -79,24 +79,107 @@ function! s:check_skip_conceal()
     endif
 endfunction
 
-let s:tests = {
+" we store all the key mapping tests in this dictionary
+" this help standardize tests between the different modes
+" such as conceal-based vs. replacement-based
+let s:test = {
     \ 'f': {},
     \ 'F': {},
     \ 't': {},
     \ 'T': {},
 \ }
 
-function! s:tests.f.search_forward_one()
-    normal! gg
-    normal fea
-    Expect CursorInfo() == [1, 2, 'e']
-endfunction
+" tests for "f"
 
-function! s:tests.f.search_forward_multiple()
-    normal! gg
-    normal fea
-    Expect CursorInfo() == [1, 2, 'e']
-endfunction
+    function! s:test.f.one_match()
+        normal! gg
+        normal fea
+        Expect CursorInfo() == [1, 2, 'e']
+    endfunction
+
+    function! s:test.f.multiple_matches()
+        normal! gg
+        normal fea
+        Expect CursorInfo() == [1, 2, 'e']
+    endfunction
+
+    function! s:test.f.ignore_case()
+        normal! gg
+        normal ftb
+        Expect CursorInfo() == [2, 11, 't']
+    endfunction
+
+    function! s:test.f.direction()
+        normal! G$
+        normal fea
+        Expect CursorInfo() == [2, 15, '.']
+    endfunction
+
+    function! s:test.f.delete()
+        normal! gg
+        normal dfoa
+        Expect getline('.') == ' world.'
+    endfunction
+
+    function! s:test.f.replace()
+        normal! gg
+        execute "normal rfoaHi\<Esc>"
+        Expect getline('.') == 'Hi world.'
+    endfunction
+
+    function! s:test.f.yank()
+        normal! gg
+        normal yfoaP
+        Expect getline('.') == 'HelloHello world.'
+    endfunction
+
+" tests for "F"
+
+    function! s:test.F.one_match()
+        normal! G$
+        normal Fwa
+        Expect CursorInfo() == [1, 7, 'w']
+    endfunction
+
+    function! s:test.F.multiple_matches()
+        normal! G$
+        normal Fib
+        Expect CursorInfo() == [2, 3, 'i']
+    endfunction
+
+    function! s:test.F.ignore_case()
+        normal! G$
+        normal FTc
+        Expect CursorInfo() == [2, 1, 'T']
+    endfunction
+
+    function! s:test.F.direction()
+        normal! gg
+        normal Fea
+        Expect CursorInfo() == [1, 1, 'H']
+    endfunction
+
+    function! s:test.F.delete()
+        normal! gg$
+        normal dFwa
+        Expect getline('.') == 'Hello .'
+    endfunction
+
+    function! s:test.F.replace()
+        normal! gg$
+        execute "normal rFwaplanet\<Esc>"
+        Expect getline('.') == 'Hello planet.'
+    endfunction
+
+    function! s:test.F.yank()
+        normal! gg$
+        " note that the cursor moves when yanking backwards, but not forwards
+        " this is the same as Vim's normal behavior
+        normal yFwaP
+        Expect getline('.') == 'Hello worldworld.'
+    endfunction
+
+" calling the tests using vspec
 
 describe 'Conceal-based'
     before
@@ -115,63 +198,74 @@ describe 'Conceal-based'
     context "f"
         it 'searches forward with one match'
             call s:check_skip_conceal()
-            call s:tests.f.search_forward_one()
+            call s:test.f.one_match()
         end
 
         it 'searches forward with multiple matches'
             call s:check_skip_conceal()
-            call s:tests.f.search_forward_multiple()
+            call s:test.f.multiple_matches()
         end
 
         it 'ignores case by default'
             call s:check_skip_conceal()
-            normal! gg
-            normal ftb
-            Expect CursorInfo() == [2, 11, 't']
+            call s:test.f.ignore_case()
         end
 
         it 'does not search backward'
             call s:check_skip_conceal()
-            normal! G$
-            normal fea
-            Expect CursorInfo() == [2, 15, '.']
+            call s:test.f.direction()
         end
 
         it "deletes text with 'd'"
             call s:check_skip_conceal()
-            normal! gg
-            normal dfoa
-            Expect getline('.') == ' world.'
+            call s:test.f.delete()
+        end
+
+        it "replaces text with 'r'"
+            call s:check_skip_conceal()
+            call s:test.f.yank()
+        end
+
+        it "yanks text with 'y'"
+            call s:check_skip_conceal()
+            call s:test.f.yank()
         end
     end
 
     context "F"
         it 'searches backward with one match'
             call s:check_skip_conceal()
-            normal! G$
-            normal Fwa
-            Expect CursorInfo() == [1, 7, 'w']
+            call s:test.F.one_match()
         end
 
         it 'searches backward with multiple matches'
             call s:check_skip_conceal()
-            normal! G$
-            normal Fib
-            Expect CursorInfo() == [2, 3, 'i']
+            call s:test.F.multiple_matches()
         end
 
         it 'ignores case by default'
             call s:check_skip_conceal()
-            normal! G$
-            normal FTc
-            Expect CursorInfo() == [2, 1, 'T']
+            call s:test.F.ignore_case()
         end
 
         it 'does not search forward'
             call s:check_skip_conceal()
-            normal! gg
-            normal Fea
-            Expect CursorInfo() == [1, 1, 'H']
+            call s:test.F.direction()
+        end
+
+        it "deletes text with 'd'"
+            call s:check_skip_conceal()
+            call s:test.F.delete()
+        end
+
+        it "replaces text with 'r'"
+            call s:check_skip_conceal()
+            call s:test.F.yank()
+        end
+
+        it "yanks text with 'y'"
+            call s:check_skip_conceal()
+            call s:test.F.yank()
         end
     end
 end
@@ -192,49 +286,75 @@ describe 'Single replacement-based'
 
     context "f"
         it 'searches forward with one match'
-            call s:tests.f.search_forward_one()
+            call s:check_skip_conceal()
+            call s:test.f.one_match()
         end
 
         it 'searches forward with multiple matches'
-            call s:tests.f.search_forward_multiple()
+            call s:check_skip_conceal()
+            call s:test.f.multiple_matches()
         end
 
         it 'ignores case by default'
-            normal! gg
-            normal ftb
-            Expect CursorInfo() == [2, 11, 't']
+            call s:check_skip_conceal()
+            call s:test.f.ignore_case()
         end
 
         it 'does not search backward'
-            normal! G$
-            normal fea
-            Expect CursorInfo() == [2, 15, '.']
+            call s:check_skip_conceal()
+            call s:test.f.direction()
+        end
+
+        it "deletes text with 'd'"
+            call s:check_skip_conceal()
+            call s:test.f.delete()
+        end
+
+        it "replaces text with 'r'"
+            call s:check_skip_conceal()
+            call s:test.f.yank()
+        end
+
+        it "yanks text with 'y'"
+            call s:check_skip_conceal()
+            call s:test.f.yank()
         end
     end
 
     context "F"
         it 'searches backward with one match'
-            normal! G$
-            normal Fwa
-            Expect CursorInfo() == [1, 7, 'w']
+            call s:check_skip_conceal()
+            call s:test.F.one_match()
         end
 
         it 'searches backward with multiple matches'
-            normal! G$
-            normal Fib
-            Expect CursorInfo() == [2, 3, 'i']
+            call s:check_skip_conceal()
+            call s:test.F.multiple_matches()
         end
 
         it 'ignores case by default'
-            normal! G$
-            normal FTc
-            Expect CursorInfo() == [2, 1, 'T']
+            call s:check_skip_conceal()
+            call s:test.F.ignore_case()
         end
 
         it 'does not search forward'
-            normal! gg
-            normal Fea
-            Expect CursorInfo() == [1, 1, 'H']
+            call s:check_skip_conceal()
+            call s:test.F.direction()
+        end
+
+        it "deletes text with 'd'"
+            call s:check_skip_conceal()
+            call s:test.F.delete()
+        end
+
+        it "replaces text with 'r'"
+            call s:check_skip_conceal()
+            call s:test.F.yank()
+        end
+
+        it "yanks text with 'y'"
+            call s:check_skip_conceal()
+            call s:test.F.yank()
         end
     end
 end
