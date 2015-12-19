@@ -88,8 +88,6 @@ describe 'Conceal-based'
         it 'searches forward with one match'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! gg
             normal fea
