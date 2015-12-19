@@ -317,9 +317,11 @@ function! s:search_using_pattern(args) abort
         endfor
 
         " remove highlights
-        for id in match_ids
-            call matchdelete(id)
-        endfor
+        if exists("match_ids")
+            for id in match_ids
+                call matchdelete(id)
+            endfor
+        endif
 
         " stupid hackery
         if getbufvar("", "emotions_has_been_run") == 1
