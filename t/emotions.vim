@@ -97,8 +97,6 @@ describe 'Conceal-based'
         it 'searches forward with multiple matches'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! gg
             normal fib
@@ -119,8 +117,6 @@ describe 'Conceal-based'
         it 'does not search backward'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
             normal fea
@@ -132,8 +128,6 @@ describe 'Conceal-based'
         it 'searches backward with one match'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
             normal Fwa
@@ -143,8 +137,6 @@ describe 'Conceal-based'
         it 'searches backward with multiple matches'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
             normal Fib
@@ -154,8 +146,6 @@ describe 'Conceal-based'
         it 'ignores case by default'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! G$
             normal FTc
@@ -165,8 +155,6 @@ describe 'Conceal-based'
         it 'does not search forward'
             if ! has('conceal')
                 SKIP 'Conceal is not enabled'
-            elseif v:version < 704
-                SKIP 'Conceal only works properly on Vim 7.4+'
             endif
             normal! gg
             normal Fea
