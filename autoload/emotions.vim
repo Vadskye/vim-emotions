@@ -128,7 +128,7 @@ endfunction
 function! emotions#search_using_pattern(args, ...) abort
 
     " determine whether we are currently executing an operator
-    let current_operator = get(a:000, 0)
+    let current_operator = get(a:000, 0, "")
     if get(a:args, 'repeat')
         let current_operator = s:last_operator
     endif
@@ -159,8 +159,11 @@ function! emotions#search_using_pattern(args, ...) abort
         \ 'skip_folded_lines': g:emotions_skip_folded_lines,
     \ })
 
-    if exists('current_operator')
+    if exists('current_operator') && current_operator != ""
         silent! call repeat#set("\<Plug>(emotions-repeat)", v:count)
+        if current_operator == 'c'
+            startinsert
+        endif
     endif
 endfunction
 
