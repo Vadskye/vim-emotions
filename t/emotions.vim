@@ -22,6 +22,7 @@ function! CreateBuffer()
     " remove the blank first line
     normal! ggdd
     " the buffer now has two lines: 'Hello World', and 'This is a test'
+
 endfunction
 
 describe 'Default config'
@@ -70,83 +71,77 @@ describe 'Default config'
     end
 end
 
-describe 'Conceal-based motion commands:'
-    before
-        call CreateBuffer()
-    end
-
-    after
-        close!
-    end
-
-    if ! has('conceal')
-        SKIP 'conceal is not available.'
-    endif
-
-    it 'has correct text'
-        Expect getline(1) == 'Hello world.'
-        Expect getline(2) == 'This is a test.'
-    end
-
-    it 'has mapped keys'
-        Expect maparg('f', 'n') == "<Plug>(emotions-f)"
-        Expect maparg('F', 'n') == "<Plug>(emotions-F)"
-        Expect maparg('t', 'n') == "<Plug>(emotions-t)"
-        Expect maparg('T', 'n') == "<Plug>(emotions-T)"
-    end
-
-    context "f"
-        it 'searches forward with one match'
-            normal! gg
-            normal fea
-            Expect CursorInfo() == [1, 2, 'e']
+if has('conceal')
+    describe 'Conceal-based motion commands:'
+        before
+            call CreateBuffer()
         end
 
-        it 'searches forward with multiple matches'
-            normal! gg
-            normal fib
-            Expect CursorInfo() == [2, 6, 'i']
+        after
+            close!
         end
 
-        it 'ignores case by default'
-            normal! gg
-            normal ftb
-            Expect CursorInfo() == [2, 11, 't']
+        it 'uses conceal-based highlighting'
+            Expect g:emotions_highlight_type == 'conceal'
         end
 
-        it 'does not search backward'
-            normal! G$
-            normal fea
-            Expect CursorInfo() == [2, 15, '.']
-        end
-    end
+        context "f"
+            it 'searches forward with one match'
+                normal! gg
+                normal fea
+                Expect CursorInfo() == [1, 2, 'e']
+            end
 
-    context "F"
-        it 'searches backward with one match'
-            normal! G$
-            normal Fwa
-            Expect CursorInfo() == [1, 7, 'w']
+            it 'searches forward with multiple matches'
+                normal! gg
+                normal fib
+                Expect CursorInfo() == [2, 6, 'i']
+            end
+
+            it 'ignores case by default'
+                normal! gg
+                normal ftb
+                Expect CursorInfo() == [2, 11, 't']
+            end
+
+            it 'does not search backward'
+                normal! G$
+                normal fea
+                Expect CursorInfo() == [2, 15, '.']
+            end
         end
 
-        it 'searches backward with multiple matches'
-            normal! G$
-            normal Fib
-            Expect CursorInfo() == [2, 3, 'i']
-        end
+        context "F"
+            it 'searches backward with one match'
+                normal! G$
+                normal Fwa
+                Expect CursorInfo() == [1, 7, 'w']
+            end
 
-        it 'ignores case by default'
-            normal! G$
-            normal FTc
-            Expect CursorInfo() == [2, 1, 'T']
-        end
+            it 'searches backward with multiple matches'
+                normal! G$
+                normal Fib
+                Expect CursorInfo() == [2, 3, 'i']
+            end
 
-        it 'does not search forward'
-            normal! gg
-            normal Fea
-            Expect CursorInfo() == [1, 1, 'H']
+            it 'ignores case by default'
+                normal! G$
+                normal FTc
+                Expect CursorInfo() == [2, 1, 'T']
+            end
+
+            it 'does not search forward'
+                normal! gg
+                normal Fea
+                Expect CursorInfo() == [1, 1, 'H']
+            end
         end
     end
-end
+else
+    it 'Conceal-based motion commands:'
+        SKIP 'Conceal is not present'
+    end
+endif
 
 describe 'Single replacement-based motion commands:'
     before
@@ -158,16 +153,8 @@ describe 'Single replacement-based motion commands:'
         close!
     end
 
-    it 'has correct text'
-        Expect getline(1) == 'Hello world.'
-        Expect getline(2) == 'This is a test.'
-    end
-
-    it 'has mapped keys'
-        Expect maparg('f', 'n') == "<Plug>(emotions-f)"
-        Expect maparg('F', 'n') == "<Plug>(emotions-F)"
-        Expect maparg('t', 'n') == "<Plug>(emotions-t)"
-        Expect maparg('T', 'n') == "<Plug>(emotions-T)"
+    it 'uses single replacement-based highlighting'
+        Expect g:emotions_highlight_type == 'single'
     end
 
     context "f"
