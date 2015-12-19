@@ -17,7 +17,7 @@ let s:last_operator = ""
 "       "message" (string): message to display
 "       "highlight_color" (string): highlight group for the message
 "           Use 'None' to disable highlighting
-function! s:display_message(message, highlight_color)
+function! s:display_message(message, highlight_color) abort
     execute "echohl " . a:highlight_color
     echomsg a:message
     echohl None
@@ -52,7 +52,7 @@ endif
 "       "direction" (string): as in s:search_using_pattern
 "       "include_destination" (number): as in s:search_using_pattern
 "       "scope" (string): as in s:search_using_pattern
-function! emotions#search_for_characters(args, ...)
+function! emotions#search_for_characters(args, ...) abort
     let character_count = a:args.character_count
     let current_operator = get(a:000, 0)
 
@@ -125,7 +125,7 @@ endfunction
 "       "scope" (string): as s:search_using_pattern
 "   Optional:
 "       "repeat" (number): if true, currently executing a repeated motion
-function! emotions#search_using_pattern(args, ...)
+function! emotions#search_using_pattern(args, ...) abort
 
     " determine whether we are currently executing an operator
     let current_operator = get(a:000, 0)
@@ -772,7 +772,7 @@ endfunction
 "       "pattern" (string): pattern being searched for
 " Returns:
 "   "match_ids" (list): list of IDs corresponding to match groups
-function! s:highlight_match_locations(args)
+function! s:highlight_match_locations(args) abort
     let match_ids = []
     let match_length = len(a:args.pattern)
 
@@ -948,7 +948,7 @@ endfunction
 "       "scope" (string): as in s:search_using_pattern
 "       "start_of_line" (number): if true, go to the start of the line
 "           if false, go to the current cursor position
-function! emotions#search_for_column(args, ...)
+function! emotions#search_for_column(args, ...) abort
     let current_operator = get(a:000, 0)
     let column = a:args.start_of_line
         \ ? 1
@@ -973,7 +973,7 @@ endfunction
 "       "scope" (string): as in s:search_using_pattern
 "       "start_of_line" (number): if true, go to the start of the line
 "           if false, go to the current cursor position
-function! emotions#search_for_last_search(args, ...)
+function! emotions#search_for_last_search(args, ...) abort
     let current_operator = get(a:000, 0)
     let pattern = getreg('/')
     let direction = a:args.direction
@@ -1001,7 +1001,7 @@ function! emotions#search_for_last_search(args, ...)
     \ }, current_operator)
 endfunction
 
-function! emotions#repeat(args)
+function! emotions#repeat(args) abort
 
     if ! has_key(s:last_motion_args, 'pattern')
         call s:display_message("No motion to repeat", 'WarningMsg')
