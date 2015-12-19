@@ -34,6 +34,10 @@ else
     function! s:matchaddpos(group, pos, ...) abort
         let patterns = []
         for location in a:pos
+            " make sure location is actually a valid location
+            if ! (type(location[0]) == type(0) && type(location[1] == type(1)))
+                throw "Potentially invalid location: " . string(location)
+            endif
             call add(patterns, '%l' . location[0] . '%c' . location[1]
                 \ . '.{1,' . get(location, 2, 1) . '}'
             \ )
