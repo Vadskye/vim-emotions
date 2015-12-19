@@ -944,6 +944,12 @@ function! s:jump_to_location(args) abort
 
         silent execute "normal! " . motion_command
             \ . ":call cursor(" .  line_number . ", " . col_number . ")\<CR>"
+
+        " for some reasons 'change' places the cursor in a strange position
+        " thank goodness for unit tests
+        if a:args.direction ==# 'backward' && a:args.current_operator == 'c'
+            silent keepjumps call cursor(line_number, col_number+1)
+        endif
     endif
 endfunction
 
