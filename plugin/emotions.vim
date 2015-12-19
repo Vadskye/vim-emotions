@@ -34,7 +34,7 @@ function! s:set_default_options()
         \ 'enable_shading': 0,
         \ 'find_mapping_prefix': '<Leader>',
         \ 'force_uppercase': 1,
-        \ 'highlight_type': has('conceal') ? 'conceal' : 'single',
+        \ 'highlight_type': has('conceal') && v:version>=704 ? 'conceal' : 'single',
         \ 'ijkl_mapping_prefix': '<Leader>',
         \ 'match_separation_distance': 2,
         \ 'keys': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
