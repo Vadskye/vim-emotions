@@ -294,8 +294,7 @@ function! s:search_using_pattern(args) abort
 
         keepjumps call cursor(original_cursor_location)
         redraw!
-        call s:display_message('Emotions: ' . v:exception, 'WarningMsg')
-        call s:display_message('    (' . v:throwpoint . ')', 'WarningMsg')
+        call s:display_message('Emotions: ' . v:exception . '    (' . v:throwpoint . ')', 'WarningMsg')
 
     finally
 
