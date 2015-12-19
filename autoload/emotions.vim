@@ -269,11 +269,10 @@ function! s:search_using_pattern(args) abort
         " shade everything which is not a label
         " use a lower priority to avoid overwriting the highlighting on the labels
         if ! empty(a:args.shade_highlight_group)
-            call add(match_ids, matchadd(
-                \ a:args.shade_highlight_group,
-                \ '.',
-                \ 1,
-            \ ))
+            echomsg "Debug: Shading"
+            echomsg "Shade group: " . a:args.shade_highlight_group
+            let shade_match_id = matchadd(a:args.shade_highlight_group, '\v.', 1)
+            call add(match_ids, shade_match_id)
         endif
 
         redraw
