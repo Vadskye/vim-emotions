@@ -237,6 +237,9 @@ function! s:search_using_pattern(args) abort
         endif
 
         if a:args.highlight_type == 'conceal'
+            " conceal also conceals incsearch targets
+            " is this a Vim bug?
+            nohlsearch
             " matching_info contains:
             "  match_ids (hash)
             "  labeled_locations (hash)
