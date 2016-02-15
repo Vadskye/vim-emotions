@@ -77,7 +77,7 @@ endif
 " if we're using conceal, we need to set the 'Conceal' highlight group
 " since there's no way to conceal with other highlight groups
 if g:emotions_highlight_type == 'conceal'
-    execute "highlight! link Conceal " . g:emotions_target_highlight_group_primary
+    execute "highlight! link Conceal " . g:emotions_highlight_primary
 endif
 
 " reset options
