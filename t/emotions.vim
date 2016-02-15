@@ -36,15 +36,15 @@ describe 'Default config'
         Expect g:emotions_enable_shading                   == 0
         Expect g:emotions_find_mapping_prefix              == '<Leader>'
         Expect g:emotions_force_uppercase                  == 1
-        Expect g:emotions_highlight_type                   == (has('conceal') && v:version >= 704) ? 'conceal' : 'single'
+        Expect g:emotions_highlight_type                   == (has('conceal') && v:version >= 704) ? 'conceal' : 'primary'
         Expect g:emotions_ijkl_mapping_prefix              == '<Leader>'
         Expect g:emotions_match_separation_distance        == 2
         Expect g:emotions_keys                             == 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         Expect g:emotions_replace_full_match               == 0
         Expect g:emotions_shade_highlight_group            == 'Comment'
         Expect g:emotions_skip_folded_lines                == 1
-        Expect g:emotions_target_highlight_group_primary   == 'IncSearch'
-        Expect g:emotions_target_highlight_group_secondary == 'Search'
+        Expect g:emotions_highlight_primary                == 'IncSearch'
+        Expect g:emotions_highlight_secondary              == 'Search'
         Expect g:emotions_word_mapping_prefix              == '<Leader>'
     end
 
@@ -434,9 +434,9 @@ describe 'Conceal-based'
     end
 end
 
-describe 'Single replacement-based'
+describe 'Primary highlight, replacement-based'
     before
-        let g:emotions_highlight_type='single'
+        let g:emotions_highlight_type='primary'
         call CreateBuffer()
     end
 
@@ -445,7 +445,7 @@ describe 'Single replacement-based'
     end
 
     it 'is enabled'
-        Expect g:emotions_highlight_type == 'single'
+        Expect g:emotions_highlight_type == 'primary'
     end
 
     context "f"
