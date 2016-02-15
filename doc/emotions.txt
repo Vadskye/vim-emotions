@@ -1,4 +1,4 @@
-*emotions.txt*  Motions so good they'll make you emotional            *emotions*
+*emotions.txt*  Motions so good they'll make you emotional           *emotions*
 
 ==============================================================================
 CONTENTS                                                   *emotions-contents*
@@ -10,7 +10,7 @@ CONTENTS                                                   *emotions-contents*
 ==============================================================================
 INTRODUCTION                                           *emotions-introduction*
 
-|emotions| provides quick, intuitive* key commands to quickly navigate text.
+|emotions| provides quick, understandable key commands to quickly navigate text.
 These commands mimic Vim's normal navigation: f, t, and so on. However, they
 solve a fundamental problem with the built-in commands.
 
@@ -30,7 +30,7 @@ in between.
 This concept can be used for more than just searches in the tradition of |f|
 and |t|. Any motion, such as |w| and |e|, can be labeled in the same way.
 This allows rapid and intuitive access to anywhere on the screen, using
-whatever tool is most appropriate.
+whatever motion is most appropriate.
 
 This idea is entirely unoriginal. It was originally created by Bartlomiej
 Podolak for his Precise Jump script.
@@ -39,8 +39,6 @@ This was adapted by Lokaltog, to create the excellent EasyMotion plugin
 (see https://github.com/easymotion/vim-easymotion)
 which currently maintained by haya14busa. The |emotion| plugin is simply a
 more modern re-implementation of that core idea.
-
-* For a sufficiently generous definition of "intuitive"
 
 ==============================================================================
 COMPARISON WITH EASYMOTION                           *emotions-vs-easymotion*
@@ -71,20 +69,20 @@ GETTING STARTED                                  *emotions-getting-started*
 You can use |emotions| without any configuration. By default, it provides the
 following mappings that correspond to normal single-character find motions:
 
-    <Leader>f Search forwards for one character, including the destination
-    <Leader>F Search backwards for one character, including the destination
-    <Leader>t Search forwards for one character, excluding the destination
-    <Leader>T Search backwards for one character, excluding the destination
+    <Leader>f  Search forwards for one character, including the destination
+    <Leader>F  Search backwards for one character, including the destination
+    <Leader>t  Search forwards for one character, excluding the destination
+    <Leader>T  Search backwards for one character, excluding the destination
 
 In addition, it provides the following mappings that correspond to normal
 |word|-based motions:
 
-    <Leader>w Start of the next |word|
-    <Leader>W Start of the next |WORD|
-    <Leader>e End of the next |word|
-    <Leader>E End of the next |WORD|
-    <Leader>b Start of the previous |word|
-    <Leader>B Start of the previous |WORD|
+    <Leader>w  Start of the next |word|
+    <Leader>W  Start of the next |WORD|
+    <Leader>e  End of the next |word|
+    <Leader>E  End of the next |WORD|
+    <Leader>b  Start of the previous |word|
+    <Leader>B  Start of the previous |WORD|
     <Leader>ge End of the previous |word|
     <Leader>gE End of the previous |WORD|
 
@@ -119,5 +117,120 @@ work in Visual mode, but that is coming soon.
 ==============================================================================
 CONFIGURATION                                         *emotions-configuration*
 
+*g:emotions_create_commands*
+    If true, create commands that allow Emotions. >
+    let g:emotions_create_commands = 1
+
+*g:emotions_create_find_mappings*
+    If true, create mappings for "find" motions: |f| and |t|. >
+    let g:emotions_create_find_mappings = 1
+See also |emotions_find_mapping_prefix|.
+
+*g:emotions_create_ijkl_mappings*
+    If true, create mappings for "ijkl" motions. >
+    let g:create_ijkl_mappings = 0
+See also |emotions_ijkl_mapping_prefix|.
+
+This is an alternate configuration which treats the ijkl keys as if they
+were arrow keys:
+    <i>: <Up>
+    <j>: <Left>
+    <l>: <Right>
+    <k>: <Down>
+
+It also creates the following mappings, continuing the theme of home-row
+navigation:
+    <u>: Beginning of last text block (not |word|)
+    <U>: End of last text block
+    <o>: Beginning of next text block
+    <O>: End of next text block
+
+*g:emotions_create_word_mappings*
+    If true, create mappings for |word| motions: |b|, |w|, |e|, |ge|. >
+    let g:emotions_create_word_mappings = 1
+See also |emotions_word_mapping_prefix|.
+
+*g:emotions_enable_shading*
+    If true, shade non-targets when making motions. >
+    let g:emotions_enable_shading = 0
+
+*g:emotions_find_mapping_prefix*
+    This key is used before all "find" motions: |f| and |t|. >
+    let g:emotions_find_mapping_prefix = '<Leader>'
+
+*g:emotions_force_uppercase*
+    If true, treat all keys and motion targets as if they were uppercase. >
+    let g:emotions_force_uppercase = 1
+Using uppercase for all keys and targets makes it easier to tell different
+keys apart, and means you don't have to use Shift to go to specific targets.
+However, it also reduces the number of possible keys, making two-key
+combinations more common.
+
+*g:emotions_highlight_primary*
+    This highlight group is the primary group used for motion targets. >
+    let g:emotions_highlight_primary = 'IncSearch'
+See also |g:emotions_highlight_type|.
+
+*g:emotions_highlight_secondary*
+    This highlight group is the secondary group used for motion targets. >
+    let g:emotions_highlight_primary = 'IncSearch'
+See also |g:emotions_highlight_type|.
+
+*g:emotions_highlight_type*
+    Set the type of highlighting that Emotions uses. >
+    let g:emotions_highlight_type = 'conceal'
+Emotions can use one of three different highlight types:
+'conceal'
+    Use the |conceal| feature to replace the real text in the buffer
+    with the target keys, and highlight all keys with the primary highlight
+    group. This never alters the text in the buffer, which is safer.
+    However, it requires a recent version of Vim, and Vim still has bugs in
+    its conceal implementation.
+'primary'
+    Replace the text in the buffer with the target keys, and highlight all
+    keys with the primary highlight group.
+'alternating'
+    Replace the text in the buffer with the target keys, and highlight
+    consecutive labels in alternating colors: first the primary highlight
+    group, and then the secondary highlight group.
+See also |g:emotions_highlight_primary| and |g:emotions_highlight_secondary|.
+
+*g:emotions_ijkl_mapping_prefix*
+    This key is used before all "ijkl" motions: i, j, k, l, u, and o. >
+    let g:emotions_ijkl_mapping_prefix = '<Leader>'
+
+*g:emotions_keys*
+    This string contains all possible keys that Emotions will use to
+    highlight motion targets, in order. >
+    let g:emotions_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+*g:emotions_match_separation_distance*
+    This sets the minimum distance between two consecutive matches. >
+    let g:emotions_match_separation_distance = 2
+
+*g:emotions_replace_full_match*
+    If true, replace the full matched text when generating the motion targets.
+    Otherwise, only replace the text that would be covered by the targets. >
+    let g:emotions_replace_full_match = 0
+
+*g:emotions_shade_highlight_group*
+    This highlight group is used to shade text other the motion targets. >
+    let g:emotions_shade_highlight_group = 'Comment'
+See also |g:emotions:enable_shading|.
+
+*g:emotions_skip_folded_lines*
+    If true, skip matches within folded lines. >
+    let g:emotions_skip_folded_lines = 1
+
+*g:emotions_word_mapping_prefix*
+    This key is used before all "word" motions: |b|, |w|, |e|, |ge|. >
+    let g:emotions_word_mapping_prefix = '<Leader>'
+
 ==============================================================================
+LICENSE                                                 *emotions-license*
+
+MIT License. Copyright © 2015-2016 Kevin Johnson.
+
+
+
 vim:tw=78:sw=4:ts=4:ft=help:norl:
