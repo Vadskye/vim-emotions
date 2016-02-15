@@ -34,15 +34,15 @@ function! s:set_default_options()
         \ 'enable_shading': 0,
         \ 'find_mapping_prefix': '<Leader>',
         \ 'force_uppercase': 1,
-        \ 'highlight_type': has('conceal') && v:version>=704 ? 'conceal' : 'single',
+        \ 'highlight_type': has('conceal') && v:version>=704 ? 'conceal' : 'primary',
         \ 'ijkl_mapping_prefix': '<Leader>',
         \ 'match_separation_distance': 2,
         \ 'keys': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
         \ 'replace_full_match': 0,
         \ 'shade_highlight_group': 'Comment',
         \ 'skip_folded_lines': 1,
-        \ 'target_highlight_group_primary': 'IncSearch',
-        \ 'target_highlight_group_secondary': 'Search',
+        \ 'highlight_primary': 'IncSearch',
+        \ 'highlight_secondary': 'Search',
         \ 'word_mapping_prefix': '<Leader>',
     \ }
 
@@ -55,7 +55,7 @@ call s:set_default_options()
 " Make sure that all options which should be set by the user have valid values
 function! s:validate_options()
     let valid_values = {
-        \ 'highlight_type': ['conceal', 'single', 'alternate_labels', 'sublabels'],
+        \ 'highlight_type': ['conceal', 'primary', 'alternating', 'sublabels'],
     \ }
 
     for [variable_name, values] in items(valid_values)

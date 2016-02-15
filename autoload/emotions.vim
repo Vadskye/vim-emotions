@@ -142,8 +142,8 @@ function! emotions#search_using_pattern(args, ...) abort
         \ 'direction': a:args.direction,
         \ 'force_uppercase': g:emotions_force_uppercase,
         \ 'highlight_colors': {
-            \ 'primary': g:emotions_target_highlight_group_primary,
-            \ 'secondary': g:emotions_target_highlight_group_secondary,
+            \ 'primary': g:emotions_highlight_primary,
+            \ 'secondary': g:emotions_highlight_secondary,
         \ },
         \ 'highlight_type': g:emotions_highlight_type,
         \ 'include_destination': a:args.include_destination,
@@ -178,7 +178,7 @@ endfunction
 "       "force_uppercase" (number): if true, coerce input to be uppercase
 "       "highlight_colors" (hash): highlight colors to use, organized by purpose
 "       "highlight_type" (string): type of highlighting to use
-"           Must be 'conceal', 'single' or 'alternate_labels'
+"           Must be 'conceal', 'primary' or 'alternating'
 "       "include_destination" (number): if true, include the destination
 "           for the purposes of operators (delete, copy, etc.)
 "       "keys" (string): string containing the keys used to mark target locations
@@ -786,7 +786,7 @@ function! s:highlight_match_locations(args) abort
     let match_ids = []
     let match_length = len(a:args.pattern)
 
-    if a:args.highlight_type == 'single'
+    if a:args.highlight_type == 'primary'
         let current_color = a:args.highlight_colors.primary
 
         for [first_key, location] in items(a:args.labeled_locations)
@@ -805,7 +805,7 @@ function! s:highlight_match_locations(args) abort
             endif
         endfor
 
-    elseif a:args.highlight_type == 'alternate_labels'
+    elseif a:args.highlight_type == 'alternating'
         let alternate_labels_colors = [a:args.highlight_colors.primary, a:args.highlight_colors.secondary]
         let current_color_index = 0
         let current_color = alternate_labels_colors[current_color_index]
