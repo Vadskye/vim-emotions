@@ -254,8 +254,14 @@ function! s:search_using_pattern(args) abort
             \ })
             let match_ids = matching_info.match_ids
             let labeled_locations = matching_info.labeled_locations
-            let original_lines = {}
         else
+
+            " non-conceal searching leaves a trail in the undo history
+            " if we're not doing an operation, we don't want it in the history
+            if empty(a:args.current_operator)
+                silent! undojoin
+            endif
+
             " matching_info contains:
             "  labeled_locations (hash)
             "  original_lines (hash)
@@ -272,7 +278,6 @@ function! s:search_using_pattern(args) abort
                 \ 'labeled_locations': labeled_locations,
                 \ 'pattern': a:args.pattern,
             \ })
-            undojoin
         endif
 
         " shade everything which is not a label
@@ -314,9 +319,7 @@ function! s:search_using_pattern(args) abort
 
         " restore the text of the original lines
         if exists("original_lines")
-            for [line_number, line_text] in items(original_lines)
-                keepjumps call setline(line_number, line_text)
-            endfor
+            undojoin | call s:reset_original_lines(original_lines)
         endif
 
         " restore buffer settings
@@ -352,6 +355,12 @@ function! s:search_using_pattern(args) abort
     endif
 
     return 1
+endfunction
+
+function! s:reset_original_lines(original_lines) abort
+    for [line_number, line_text] in items(a:original_lines)
+        keepjumps call setline(line_number, line_text)
+    endfor
 endfunction
 
 " Prepare the current buffer for emotions search/replacement
