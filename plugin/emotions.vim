@@ -37,6 +37,7 @@ function! s:set_default_options()
         \ 'highlight_type': has('conceal') && v:version>=704 ? 'conceal' : 'primary',
         \ 'ijkl_mapping_prefix': '<Leader>',
         \ 'match_separation_distance': 2,
+        \ 'max_targets': 0,
         \ 'keys': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
         \ 'replace_full_match': 0,
         \ 'shade_highlight_group': 'Comment',

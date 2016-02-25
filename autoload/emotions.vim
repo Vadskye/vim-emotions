@@ -150,6 +150,7 @@ function! emotions#search_using_pattern(args, ...) abort
         \ 'keys': g:emotions_keys,
         \ 'match_length': a:args.match_length,
         \ 'match_separation_distance': g:emotions_match_separation_distance,
+        \ 'max_targets': g:emotions_max_targets,
         \ 'pattern': a:args.pattern,
         \ 'replace_full_match': g:emotions_replace_full_match,
         \ 'scope': a:args.scope,
@@ -185,6 +186,7 @@ endfunction
 "       "match_length" (number): how long matches found by the pattern should be
 "           If 0, each match may have a variable length, which is slower
 "       "match_separation_distance" (number): minimum distance between two close matches
+"       "max_targets" (number): maximum number of targets to highlight
 "       "pattern" (string): pattern to search for
 "       "replace_full_match" (number): if true, replace the full match when
 "           generating labels, rather than just the characters covered by the
@@ -224,6 +226,7 @@ function! s:search_using_pattern(args) abort
             \ 'direction': a:args.direction,
             \ 'match_length': a:args.match_length,
             \ 'match_separation_distance': a:args.match_separation_distance,
+            \ 'max_targets': a:args.max_targets,
             \ 'original_cursor_location': original_cursor_location,
             \ 'pattern': a:args.pattern,
             \ 'replace_full_match': a:args.replace_full_match,
@@ -403,6 +406,7 @@ endfunction
 "       "keys" (string): as s:search_using_pattern
 "       "match_length" (number): as s:search_using_pattern
 "       "match_separation_distance" (number): as s:search_using_pattern
+"       "max_targets" (number): as s:search_using_pattern
 "       "original_cursor_location" (list): as s:search_using_pattern
 "       "pattern" (string): as s:search_using_pattern
 "       "replace_full_match" (number): as s:replace_full_match
@@ -419,11 +423,14 @@ endfunction
 "       [line (number), col (number), match_length (number)]
 function! s:find_match_locations(args) abort
     let match_separation_distance = a:args.match_separation_distance
+    let max_targets = a:args.max_targets
     let first_line = a:args.window_boundaries[0]
     let last_line = a:args.window_boundaries[1]
     let search_flags = ""
     let match_locations = []
     let match_length = a:args.match_length
+
+    let target_count = 0
 
     while 1
         " location = [line, col]
@@ -472,6 +479,12 @@ function! s:find_match_locations(args) abort
                     \ location[0],
                     \ location[1] + match_separation_distance
                 \ )
+            endif
+
+            let target_count = target_count + 1
+            " check if we should stop finding targets
+            if max_targets > 0 && target_count >= max_targets
+                break
             endif
         endif
     endwhile

@@ -39,6 +39,7 @@ describe 'Default config'
         Expect g:emotions_highlight_type                   == (has('conceal') && v:version >= 704) ? 'conceal' : 'primary'
         Expect g:emotions_ijkl_mapping_prefix              == '<Leader>'
         Expect g:emotions_match_separation_distance        == 2
+        Expect g:emotions_max_targets                      == 0
         Expect g:emotions_keys                             == 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         Expect g:emotions_replace_full_match               == 0
         Expect g:emotions_shade_highlight_group            == 'Comment'
