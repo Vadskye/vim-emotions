@@ -208,6 +208,13 @@ See also |g:emotions_highlight_primary| and |g:emotions_highlight_secondary|.
     This sets the minimum distance between two consecutive matches. >
     let g:emotions_match_separation_distance = 2
 
+*g:emotions_max_targets*
+    This sets the maximum number of targets to display.
+    A value of 0 will show all possible targets. >
+    let g:emotions_max_targets = 0
+Setting this value to the number of possible keys (see |g:emotions_keys|)
+prevents any two-key targets from appearing, which may be useful.
+
 *g:emotions_replace_full_match*
     If true, replace the full matched text when generating the motion targets.
     Otherwise, only replace the text that would be covered by the targets. >
@@ -216,7 +223,7 @@ See also |g:emotions_highlight_primary| and |g:emotions_highlight_secondary|.
 *g:emotions_shade_highlight_group*
     This highlight group is used to shade text other the motion targets. >
     let g:emotions_shade_highlight_group = 'Comment'
-See also |g:emotions:enable_shading|.
+See also |g:emotions_enable_shading|.
 
 *g:emotions_skip_folded_lines*
     If true, skip matches within folded lines. >
