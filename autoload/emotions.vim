@@ -291,6 +291,10 @@ function! s:search_using_pattern(args) abort
             \ ))
         endif
 
+        " bring the cursor back to the original location before redrawing
+        " this makes visual mode mappings draw properly
+        keepjumps call cursor(original_cursor_location)
+
         redraw
         " chosen_location is [line, col, match_length?] if successful
         " or 0 if failed

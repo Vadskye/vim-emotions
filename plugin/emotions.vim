@@ -114,7 +114,9 @@ function! s:create_plug_mapping(name, function_name, function_args)
     " operator to be handled internally via v:operator
     silent execute 'onoremap <silent> <Plug>(emotions-' . a:name . ') ' .
         \ '<Esc>:<C-U>call emotions#' . a:function_name . '(' . string(a:function_args) . ', v:operator)<CR>'
-    " TODO: add xnoremap?
+    silent execute 'xnoremap <silent> <Plug>(emotions-' . a:name . ') ' .
+        \ '<Esc>:<C-U>execute "normal! gv"<Bar>' .
+        \ 'call emotions#' . a:function_name . '(' . string(a:function_args) . ', v:operator)<CR>'
 endfunction
 
 " escape the | because we pass this into an eval
