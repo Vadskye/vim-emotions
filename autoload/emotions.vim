@@ -206,16 +206,12 @@ function! s:search_using_pattern(args) abort
             if a:args.direction == 'forward'
                 let window_boundaries = [line('.'), line('w$')]
             elseif a:args.direction == 'backward'
-                let window_boundaries = [line('w0'), line('.')]
-                " start searching from the top of the window
-                keepjumps call cursor(window_boundaries[0], 1)
+                let window_boundaries = [line('.'), line('w0')]
             else
                 throw "Invalid direction: " . a:args.direction
             endif
         elseif a:args.scope == 'window'
             let window_boundaries = [line('w0'), line('w$')]
-            " start searching from the top of the window
-            keepjumps call cursor(window_boundaries[0], 1)
         elseif a:args.scope == 'within_line'
             let window_boundaries = [line('.'), line('.')]
         else
@@ -238,6 +234,10 @@ function! s:search_using_pattern(args) abort
         if empty(match_locations)
             call s:display_message('No matches found', 'None')
         endif
+
+        " go back to the starting location - if we succeeded, we want to be there
+        " to jump correctly, and if not, we want to end there
+        keepjumps call cursor(original_cursor_location)
 
         if a:args.highlight_type == 'conceal'
             " conceal also conceals incsearch targets
@@ -303,10 +303,6 @@ function! s:search_using_pattern(args) abort
             \ 'force_uppercase': a:args.force_uppercase,
             \ 'labeled_locations': labeled_locations,
         \ })
-
-        " go back to the starting location - if we succeeded, we want to be there
-        " to jump correctly, and if not, we want to end there
-        keepjumps call cursor(original_cursor_location)
 
     catch
 
@@ -439,9 +435,14 @@ function! s:find_match_locations(args) abort
     let max_targets = a:args.max_targets
     let first_line = a:args.window_boundaries[0]
     let last_line = a:args.window_boundaries[1]
-    let search_flags = ""
     let match_locations = []
     let match_length = a:args.match_length
+
+    if a:args.direction == 'backward'
+        let search_flags = 'b'
+    else
+        let search_flags = ""
+    endif
 
     let target_count = 0
 
@@ -454,10 +455,13 @@ function! s:find_match_locations(args) abort
         endif
 
         if a:args.skip_folded_lines && foldclosed(location[0]) != -1
-            " if we are in a fold, and should skip folds, go to the end of the fold
+            " if we are in a fold, and should skip folds, go to the other side of the fold
             " and do not save this match location
-            let last_line_of_fold = foldclosedend(location[0])
-            keepjumps call cursor(last_line_of_fold, 1)
+            if a:args.direction == 'backward'
+                keepjumps call cursor(foldclosed(location[0]), 1)
+            else
+                keepjumps call cursor(foldclosedend(location[0]), 1)
+            endif
         else
 
             " if we care about match length, determine the length of the match
@@ -470,6 +474,12 @@ function! s:find_match_locations(args) abort
                 else
                     let match_end_location = searchpos(a:args.pattern, search_flags . "e", last_line)
                     let match_length = match_end_location[1] - location[1]
+                endif
+
+                " if we're going backwards, return to the start of the match
+                " to avoid looping over the match indefinitely
+                if a:args.direction == 'backward'
+                    keepjumps call cursor(location)
                 endif
 
                 " add the match length to the location
@@ -488,11 +498,19 @@ function! s:find_match_locations(args) abort
 
             " push the cursor to avoid overlapping target labels
             if match_separation_distance
-                keepjumps call cursor(
-                    \ location[0],
-                    \ location[1] + match_separation_distance
-                \ )
+                if a:args.direction == 'backward'
+                    keepjumps call cursor(
+                        \ location[0],
+                        \ max([1, location[1] - match_separation_distance])
+                    \ )
+                else
+                    keepjumps call cursor(
+                        \ location[0],
+                        \ location[1] + match_separation_distance
+                    \ )
+                endif
             endif
+
 
             let target_count = target_count + 1
             " check if we should stop finding targets
@@ -501,26 +519,6 @@ function! s:find_match_locations(args) abort
             endif
         endif
     endwhile
-
-    if a:args.direction ==# 'backward'
-        call reverse(match_locations)
-
-        " when searching backwards with scope = 'direction',
-        " it is possible to have matches after the original cursor location
-        " it's faster to just strip them here
-        if a:args.scope ==# 'direction'
-            let first_valid_index = 0
-            for location in match_locations
-                 if location[0] >= a:args.original_cursor_location[0]
-                             \ && location[1] > a:args.original_cursor_location[1]
-                    let first_valid_index = first_valid_index + 1
-                else
-                    break
-                endif
-            endfor
-            let match_locations = match_locations[first_valid_index :]
-        endif
-    endif
 
     return match_locations
 endfunction
