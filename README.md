@@ -26,7 +26,7 @@ This allows rapid and intuitive access to anywhere on the screen, using
 whatever motion is most appropriate.
 
 This idea is entirely unoriginal. It was originally created by Bartlomiej
-Podolak for his [Precise Jump script](http://www.vim.org/scripts/script.php?script_id=3437)
+Podolak for his [Precise Jump script](http://www.vim.org/scripts/script.php?script_id=3437).
 This was adapted by Lokaltog, to create the excellent [EasyMotion plugin](https://github.com/easymotion/vim-easymotion)
 which currently maintained by haya14busa. The emotions plugin is simply a
 more modern re-implementation of that core idea.
@@ -43,10 +43,8 @@ the label keys, and then restoring the original text after the motion is
 complete. By default, emotions instead uses Vim's "conceal" feature to apply
 custom highlighting to each label, concealing the real text visually but
 leaving it unchanged. This is safer and, in many cases, faster.
-
 emotions also supports replacement-based labeling for systems where
 concealing is not available, or is being used for other purposes.
-
 2. Speed. EasyMotion pays a performance cost for its robust feature set, and
 any slowness when making quick motions can be painful. emotions has a more
 compact codebase, and should be faster in practice\*.
