@@ -379,7 +379,7 @@ function! s:prepare_buffer(args) abort
     \ }
 
     if a:args.highlight_type == 'conceal'
-        let new_buffer_settings['concealcursor'] = "n"
+        let new_buffer_settings['concealcursor'] = "nv"
 
         " use the original conceallevel if possible
         let original_conceal_level = getbufvar("", '&conceallevel')
