@@ -464,6 +464,7 @@ function! s:find_match_locations(args) abort
             endif
         else
 
+            let match_length = 1
             " if we care about match length, determine the length of the match
             " and save that information in the location
             if a:args.replace_full_match
@@ -481,10 +482,11 @@ function! s:find_match_locations(args) abort
                 if a:args.direction == 'backward'
                     keepjumps call cursor(location)
                 endif
-
-                " add the match length to the location
-                call add(location, match_length)
             endif
+
+            " add the match length to the location
+            call add(location, match_length)
+            " the location is now in the format [line, col, match_length]
 
             " as a special case, if the current match is at the end of the line,
             " note this in the location so we can handle this when adding labels
