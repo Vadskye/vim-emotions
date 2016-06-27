@@ -23,7 +23,7 @@ function! s:display_message(message, highlight_color) abort
     echohl None
 endfunction
 
-if exists('*matchaddpos')
+if exists('*matchaddpos') && 0
     function! s:matchaddpos(...)
         return call('matchaddpos', a:000)
     endfunction
@@ -380,7 +380,7 @@ function! s:prepare_buffer(args) abort
 
     if a:args.highlight_type == 'conceal'
         let new_buffer_settings['concealcursor'] = "n"
-        let new_buffer_settings['conceallevel'] = 1
+        let new_buffer_settings['conceallevel'] = 2
 
         " Vim has a strange bug where matchadd() does not properly update conceal
         " highlighting unless at least one syntax command has been run since the
