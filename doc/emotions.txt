@@ -6,6 +6,7 @@ CONTENTS                                                   *emotions-contents*
     01. Introduction ................................. |emotions-introduction|
         a. Comparison with EasyMotion ............... |emotions-vs-easymotion|
     02. Getting Started ........................... |emotions-getting-started|
+    03. Configuration ............................... |emotions-configuration|
 
 ==============================================================================
 INTRODUCTION                                           *emotions-introduction*
