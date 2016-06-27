@@ -120,7 +120,7 @@ work in Visual mode, but that is coming soon.
 CONFIGURATION                                         *emotions-configuration*
 
 *g:emotions_create_commands*
-    If true, create commands that allow Emotions. >
+    If true, create commands that allow |emotions|. >
     let g:emotions_create_commands = 1
 
 *g:emotions_create_find_mappings*
@@ -179,9 +179,9 @@ See also |g:emotions_highlight_type|.
 See also |g:emotions_highlight_type|.
 
 *g:emotions_highlight_type*
-    Set the type of highlighting that Emotions uses. >
+    Set the type of highlighting that |emotions| uses. >
     let g:emotions_highlight_type = 'conceal'
-Emotions can use one of three different highlight types:
+|emotions| can use one of three different highlight types:
 'conceal'
     Use the |conceal| feature to replace the real text in the buffer
     with the target keys, and highlight all keys with the primary highlight
@@ -202,7 +202,7 @@ See also |g:emotions_highlight_primary| and |g:emotions_highlight_secondary|.
     let g:emotions_ijkl_mapping_prefix = '<Leader>'
 
 *g:emotions_keys*
-    This string contains all possible keys that Emotions will use to
+    This string contains all possible keys that |emotions| will use to
     highlight motion targets, in order. >
     let g:emotions_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -241,7 +241,7 @@ KNOWN ISSUES                                           *emotions-issues*
 
 Vim has many bugs with the 'conceal' feature. When editing files that use
 concealed characters frequently, such as Vim help documents, it is generally
-advisable not to use conceal-based replacement with Emotions. That is likely
+advisable not to use conceal-based replacement with |emotions|. That is likely
 to cause strange visual anomalies, such as concealed characters becoming
 unconcealed whenever you try to make a jump motion.
 
@@ -249,7 +249,5 @@ unconcealed whenever you try to make a jump motion.
 LICENSE                                                 *emotions-license*
 
 MIT License. Copyright © 2015-2016 Kevin Johnson.
-
-
 
 vim:tw=78:sw=4:ts=4:ft=help:norl:
