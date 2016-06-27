@@ -380,7 +380,14 @@ function! s:prepare_buffer(args) abort
 
     if a:args.highlight_type == 'conceal'
         let new_buffer_settings['concealcursor'] = "n"
-        let new_buffer_settings['conceallevel'] = 2
+
+        " use the original conceallevel if possible
+        let original_conceal_level = getbufvar("", '&conceallevel')
+        if original_conceal_level == 1 || original_conceal_level == 2
+            let new_buffer_settings['conceallevel'] = original_conceal_level
+        else
+            let new_buffer_settings['conceallevel'] = 2
+        endif
 
         " Vim has a strange bug where matchadd() does not properly update conceal
         " highlighting unless at least one syntax command has been run since the
