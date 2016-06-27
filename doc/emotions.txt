@@ -7,6 +7,7 @@ CONTENTS                                                   *emotions-contents*
         a. Comparison with EasyMotion ............... |emotions-vs-easymotion|
     02. Getting Started ........................... |emotions-getting-started|
     03. Configuration ............................... |emotions-configuration|
+    04. Known Issues ....................................... |emotions-issues|
 
 ==============================================================================
 INTRODUCTION                                           *emotions-introduction*
@@ -233,6 +234,16 @@ See also |g:emotions_enable_shading|.
 *g:emotions_word_mapping_prefix*
     This key is used before all "word" motions: |b|, |w|, |e|, |ge|. >
     let g:emotions_word_mapping_prefix = '<Leader>'
+
+
+==============================================================================
+KNOWN ISSUES                                           *emotions-issues*
+
+Vim has many bugs with the 'conceal' feature. When editing files that use
+concealed characters frequently, such as Vim help documents, it is generally
+advisable not to use conceal-based replacement with Emotions. That is likely
+to cause strange visual anomalies, such as concealed characters becoming
+unconcealed whenever you try to make a jump motion.
 
 ==============================================================================
 LICENSE                                                 *emotions-license*
